@@ -2,6 +2,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 A very simple sticky notes application stripped down to the bare minimum.
 
+The goal is to have a quick, visible reminder for simple tasks — not to use the desktop as a calendar replacement.
+
 I made this because my needs are very simple:
 Open a note on the desktop → type in → delete when done.
 No fancy customization.
@@ -33,8 +35,3 @@ The installer sets the app to run on system startup.
 On startup, it will:
 * Look for existing .qnote files and reopen them.
 * If none are found, the app immediately exits — nothing runs in the background unless you have a note on screen.
-
-## Purpose
-The goal is to have a quick, visible reminder for simple tasks — not to use the desktop as a calendar replacement.
-
-
