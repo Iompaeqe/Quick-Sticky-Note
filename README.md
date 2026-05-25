@@ -2,13 +2,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 A very simple sticky notes application stripped down to the bare minimum.
 
-The goal is to have a quick, visible reminder for simple tasks — not to use the desktop as a calendar replacement.
-
 I made this because my needs are very simple:
 Open a note on the desktop → type in → delete when done.
 No fancy customization.
 No unnecessary features.
 Super simple, super easy setup.
+
+The goal is to have a quick, visible reminder for simple tasks — not to use the desktop as a calendar replacement.
 
 ## How it works
 Right-click the desktop and use the context menu option for the .qnote file type:
