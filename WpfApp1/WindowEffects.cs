@@ -38,10 +38,7 @@ namespace QuickSticky
 
             var accent = new AccentPolicy
             {
-                AccentState = NoteWindowSettings.UseAcrylicBlur
-                    ? AccentState.ACCENT_ENABLE_ACRYLICBLURBEHIND
-                    : AccentState.ACCENT_ENABLE_BLURBEHIND,
-
+                AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND,
                 AccentFlags = 0,
                 GradientColor = NoteWindowSettings.BlurTintColor,
                 AnimationId = 0
@@ -88,8 +85,7 @@ namespace QuickSticky
             ACCENT_DISABLED = 0,
             ACCENT_ENABLE_GRADIENT = 1,
             ACCENT_ENABLE_TRANSPARENTGRADIENT = 2,
-            ACCENT_ENABLE_BLURBEHIND = 3,
-            ACCENT_ENABLE_ACRYLICBLURBEHIND = 4
+            ACCENT_ENABLE_BLURBEHIND = 3
         }
 
         [StructLayout(LayoutKind.Sequential)]

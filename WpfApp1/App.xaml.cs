@@ -65,7 +65,9 @@ namespace QuickSticky
 
             if (args.Length == 0 && !opened)
             {
-                Shutdown();
+                //Shutdown();
+                var path = NoteStorage.GenerateNewPath(NotesDir);
+                CreateNote(path, spawnAtCursor: true);
             }
         }
 

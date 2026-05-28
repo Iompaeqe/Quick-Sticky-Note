@@ -16,8 +16,6 @@ namespace QuickSticky
 
         public const uint BlurTintColor = 0x00000000;
 
-        public const bool UseAcrylicBlur = true;
-
         public const DwmWindowCornerPreference CornerPreference =
             DwmWindowCornerPreference.Round;
     }
