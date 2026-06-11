@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -6,13 +7,17 @@ namespace QuickSticky
 {
     public class NoteModel
     {
+        public int Version { get; set; } = 2;
+
         public string Title { get; set; } = "";
-        public string Content { get; set; } = "";
+        public string Content { get; set; } = ""; // Legacy/plain text fallback.
 
         public double Left { get; set; } = 100;
         public double Top { get; set; } = 100;
         public double Width { get; set; } = 300;
         public double Height { get; set; } = 220;
+
+        public List<NoteBlockModel> Blocks { get; set; } = new();
 
         public static NoteModel NewBlankAtCursor()
         {
@@ -44,5 +49,16 @@ namespace QuickSticky
             public int X;
             public int Y;
         }
+    }
+
+    public class NoteBlockModel
+    {
+        public string Type { get; set; } = "Paragraph";
+
+        public string Text { get; set; } = "";
+
+        public string FileName { get; set; } = "";
+        public double Width { get; set; }
+        public double Height { get; set; }
     }
 }

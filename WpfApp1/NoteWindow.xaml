@@ -320,23 +320,37 @@
                             Click="Close_Click" />
                 </Grid>
 
-                <TextBox x:Name="Editor"
-                         Grid.Row="1"
-                         Margin="0,2,0,0"
-                         AcceptsReturn="True"
-                         TextWrapping="Wrap"
-                         VerticalScrollBarVisibility="Auto"
-                         BorderThickness="0"
-                         Background="Transparent"
-                         Foreground="#F2FFFFFF"
-                         CaretBrush="White"
-                         SelectionBrush="#55FFFFFF"
-                         FontFamily="Consolas"
-                         FontSize="14"
-                         Padding="0,2,4,4"
-                         TextChanged="Editor_TextChanged">
+                <RichTextBox x:Name="Editor"
+                             Grid.Row="1"
+                             Margin="0,2,0,0"
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Disabled"
+                             IsDocumentEnabled="True"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="#F2FFFFFF"
+                             CaretBrush="White"
+                             SelectionBrush="#55FFFFFF"
+                             FontFamily="Consolas"
+                             FontSize="14"
+                             Padding="0,2,4,4"
+                             PreviewKeyDown="Editor_PreviewKeyDown"
+                             PreviewMouseDown="Editor_PreviewMouseDown"
+                             TextChanged="Editor_TextChanged">
 
-                    <!-- <TextBox.ContextMenu> -->
+                    <RichTextBox.Resources>
+                        <Style TargetType="{x:Type Paragraph}">
+                            <Setter Property="Margin" Value="0" />
+                        </Style>
+                    </RichTextBox.Resources>
+
+                    <FlowDocument Background="Transparent"
+                                  ColumnWidth="100000"
+                                  PagePadding="0">
+                        <Paragraph Margin="0" />
+                    </FlowDocument>
+
+                    <!-- <RichTextBox.ContextMenu> -->
                     <!--     <ContextMenu> -->
                     <!--         <MenuItem Header="Cut" Command="ApplicationCommands.Cut" /> -->
                     <!--         <MenuItem Header="Copy" Command="ApplicationCommands.Copy" /> -->
@@ -344,9 +358,9 @@
                     <!--         <Separator /> -->
                     <!--         <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" /> -->
                     <!--     </ContextMenu> -->
-                    <!-- </TextBox.ContextMenu> -->
+                    <!-- </RichTextBox.ContextMenu> -->
 
-                </TextBox>
+                </RichTextBox>
             </Grid>
         </Grid>
     </Border>

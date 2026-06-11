@@ -1,9 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 
@@ -12,6 +14,8 @@ namespace QuickSticky
     public partial class NoteWindow : Window
     {
         private const string DefaultTitlePlaceholder = "Quick Note";
+        private const double MinInsertedImageWidth = 40;
+        private const double EditorImagePadding = 18;
 
         private readonly string _path;
 
@@ -35,6 +39,7 @@ namespace QuickSticky
         private bool _dirty;
         private bool _isLoading;
         private bool _isTitleEditing;
+        private ResizableImageBlock _selectedImage;
 
         private int _closeClicks;
         private DateTime _firstClickTime;
@@ -60,7 +65,10 @@ namespace QuickSticky
                 : NoteWindowSettings.DefaultHeight;
 
             TitleEditor.Text = _model.Title ?? "";
-            Editor.Text = _model.Content ?? "";
+            Editor.Document = NoteDocumentConverter.ToFlowDocument(
+                _model,
+                _path,
+                ConfigureImageBlock);
 
             UpdateWindowTitle();
             UpdateTitlePlaceholder();
@@ -197,8 +205,321 @@ namespace QuickSticky
             if (_isLoading)
                 return;
 
-            _model.Content = Editor.Text;
             MarkDirty();
+        }
+
+        private void Editor_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete && _selectedImage != null)
+            {
+                RemoveImage(_selectedImage);
+                e.Handled = true;
+                return;
+            }
+
+            if (e.Key == Key.V &&
+                Keyboard.Modifiers.HasFlag(ModifierKeys.Control) &&
+                ClipboardHasImage())
+            {
+                PasteClipboardImage();
+                e.Handled = true;
+            }
+        }
+
+        private void Editor_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (_selectedImage == null)
+                return;
+
+            if (e.OriginalSource is DependencyObject source &&
+                IsDescendantOf(source, _selectedImage))
+            {
+                return;
+            }
+
+            ClearSelectedImage();
+        }
+
+        private void PasteClipboardImage()
+        {
+            try
+            {
+                var bitmap = Clipboard.GetImage();
+
+                if (bitmap == null)
+                    return;
+
+                var fileName = NoteImageStorage.SaveClipboardBitmap(_path, bitmap);
+                var imagePath = NoteImageStorage.GetImagePath(_path, fileName);
+                var initialSize = GetInitialImageSize(bitmap);
+
+                var image = new ResizableImageBlock(
+                    fileName,
+                    imagePath,
+                    initialSize.Width,
+                    initialSize.Height);
+
+                ConfigureImageBlock(image);
+                InsertImageAtCaret(image);
+                MarkDirty();
+            }
+            catch
+            {
+                // Clipboard data can be transient or locked by another process.
+            }
+        }
+
+        private void InsertImageAtCaret(ResizableImageBlock image)
+        {
+            ClearSelectedImage();
+
+            if (!Editor.Selection.IsEmpty)
+                Editor.Selection.Text = "";
+
+            var imageBlock = NoteDocumentConverter.CreateImageBlock(image);
+            var caret = Editor.CaretPosition;
+            var paragraph = caret.Paragraph;
+
+            if (paragraph == null || !ReferenceEquals(paragraph.Parent, Editor.Document))
+            {
+                Editor.Document.Blocks.Add(imageBlock);
+                var trailingParagraph = NoteDocumentConverter.CreateParagraph("");
+                Editor.Document.Blocks.Add(trailingParagraph);
+                Editor.CaretPosition = trailingParagraph.ContentStart;
+                Editor.Focus();
+                return;
+            }
+
+            var beforeText = NoteDocumentConverter.GetText(paragraph.ContentStart, caret);
+            var afterText = NoteDocumentConverter.GetText(caret, paragraph.ContentEnd);
+
+            if (!string.IsNullOrEmpty(beforeText))
+            {
+                Editor.Document.Blocks.InsertBefore(
+                    paragraph,
+                    NoteDocumentConverter.CreateParagraph(beforeText));
+            }
+
+            Editor.Document.Blocks.InsertBefore(paragraph, imageBlock);
+
+            var afterParagraph = NoteDocumentConverter.CreateParagraph(afterText);
+            Editor.Document.Blocks.InsertBefore(paragraph, afterParagraph);
+            Editor.Document.Blocks.Remove(paragraph);
+
+            Editor.CaretPosition = afterParagraph.ContentStart;
+            Editor.Focus();
+        }
+
+        private Size GetInitialImageSize(BitmapSource bitmap)
+        {
+            var originalWidth = bitmap.Width > 0 ? bitmap.Width : bitmap.PixelWidth;
+            var originalHeight = bitmap.Height > 0 ? bitmap.Height : bitmap.PixelHeight;
+
+            if (originalWidth <= 0 || originalHeight <= 0)
+                return new Size(120, 90);
+
+            var maxWidth = GetEditorImageFitWidth();
+            var targetWidth = Math.Min(originalWidth, maxWidth);
+
+            if (originalWidth >= MinInsertedImageWidth)
+                targetWidth = Math.Max(MinInsertedImageWidth, targetWidth);
+
+            var aspectRatio = originalWidth / originalHeight;
+            return new Size(targetWidth, targetWidth / aspectRatio);
+        }
+
+        private double GetEditorImageFitWidth()
+        {
+            var width = Editor.ActualWidth -
+                        Editor.Padding.Left -
+                        Editor.Padding.Right -
+                        EditorImagePadding;
+
+            if (double.IsNaN(width) || double.IsInfinity(width) || width <= 0)
+                width = ActualWidth - 40;
+
+            return Math.Max(MinInsertedImageWidth, width);
+        }
+
+        private void ConfigureImageBlock(ResizableImageBlock image)
+        {
+            image.Selected += Image_Selected;
+            image.DeleteRequested += Image_DeleteRequested;
+            image.FitRequested += Image_FitRequested;
+            image.SizeChangedByUser += Image_SizeChangedByUser;
+        }
+
+        private void Image_Selected(object sender, EventArgs e)
+        {
+            if (sender is ResizableImageBlock image)
+                SelectImage(image);
+        }
+
+        private void Image_DeleteRequested(object sender, EventArgs e)
+        {
+            if (sender is ResizableImageBlock image)
+                RemoveImage(image);
+        }
+
+        private void Image_FitRequested(object sender, EventArgs e)
+        {
+            if (sender is not ResizableImageBlock image)
+                return;
+
+            var width = GetEditorImageFitWidth();
+            image.SetDisplaySize(width, width / image.AspectRatio);
+            MarkDirty();
+        }
+
+        private void Image_SizeChangedByUser(object sender, EventArgs e)
+        {
+            MarkDirty();
+        }
+
+        private void SelectImage(ResizableImageBlock image)
+        {
+            if (_selectedImage != null && !ReferenceEquals(_selectedImage, image))
+                _selectedImage.SetSelected(false);
+
+            _selectedImage = image;
+            _selectedImage.SetSelected(true);
+        }
+
+        private void ClearSelectedImage()
+        {
+            if (_selectedImage != null)
+                _selectedImage.SetSelected(false);
+
+            _selectedImage = null;
+        }
+
+        private void RemoveImage(ResizableImageBlock image)
+        {
+            var imageBlock = FindImageBlock(image);
+
+            if (imageBlock == null)
+                return;
+
+            var caretTarget = FindNextParagraph(imageBlock) ?? FindPreviousParagraph(imageBlock);
+
+            Editor.Document.Blocks.Remove(imageBlock);
+            NoteDocumentConverter.EnsureEditableDocument(Editor.Document);
+
+            caretTarget ??= FindFirstParagraph();
+
+            if (caretTarget != null)
+                Editor.CaretPosition = caretTarget.ContentStart;
+
+            ClearSelectedImage();
+            Editor.Focus();
+            MarkDirty();
+        }
+
+        private Block FindImageBlock(ResizableImageBlock image)
+        {
+            foreach (var block in Editor.Document.Blocks)
+            {
+                if (block is BlockUIContainer container &&
+                    ReferenceEquals(container.Child, image))
+                {
+                    return container;
+                }
+
+                if (block is Paragraph paragraph)
+                {
+                    foreach (var inline in paragraph.Inlines)
+                    {
+                        if (inline is InlineUIContainer inlineContainer &&
+                            ReferenceEquals(inlineContainer.Child, image))
+                        {
+                            return paragraph;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private Paragraph FindNextParagraph(Block block)
+        {
+            var foundBlock = false;
+
+            foreach (var candidate in Editor.Document.Blocks)
+            {
+                if (foundBlock && candidate is Paragraph paragraph)
+                    return paragraph;
+
+                if (ReferenceEquals(candidate, block))
+                    foundBlock = true;
+            }
+
+            return null;
+        }
+
+        private Paragraph FindPreviousParagraph(Block block)
+        {
+            Paragraph previousParagraph = null;
+
+            foreach (var candidate in Editor.Document.Blocks)
+            {
+                if (ReferenceEquals(candidate, block))
+                    return previousParagraph;
+
+                if (candidate is Paragraph paragraph)
+                    previousParagraph = paragraph;
+            }
+
+            return null;
+        }
+
+        private Paragraph FindFirstParagraph()
+        {
+            foreach (var block in Editor.Document.Blocks)
+            {
+                if (block is Paragraph paragraph)
+                    return paragraph;
+            }
+
+            return null;
+        }
+
+        private static bool ClipboardHasImage()
+        {
+            try
+            {
+                return Clipboard.ContainsImage();
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static bool IsDescendantOf(DependencyObject source, DependencyObject target)
+        {
+            while (source != null)
+            {
+                if (ReferenceEquals(source, target))
+                    return true;
+
+                if (source is FrameworkContentElement contentElement)
+                {
+                    source = contentElement.Parent;
+                    continue;
+                }
+
+                try
+                {
+                    source = VisualTreeHelper.GetParent(source);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            return false;
         }
 
         private void UpdateWindowTitle()
@@ -215,7 +536,7 @@ namespace QuickSticky
                 : Visibility.Collapsed;
         }
 
-        private void Window_LocationOrSizeChanged(object? sender, EventArgs e)
+        private void Window_LocationOrSizeChanged(object sender, EventArgs e)
         {
             if (_isLoading)
                 return;
@@ -239,6 +560,10 @@ namespace QuickSticky
         {
             try
             {
+                _model.Version = 2;
+                _model.Blocks = NoteDocumentConverter.ToBlocks(Editor.Document);
+                _model.Content = NoteDocumentConverter.ToPlainText(_model.Blocks);
+
                 NoteStorage.Save(_path, _model);
                 _dirty = false;
                 _saveTimer.Stop();
@@ -290,7 +615,7 @@ namespace QuickSticky
             }
         }
 
-        protected override void OnClosing( System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             if (_closeClicks < NoteWindowSettings.RequiredCloseClicks)
                 SaveNow();
