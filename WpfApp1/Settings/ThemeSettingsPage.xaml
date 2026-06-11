@@ -1,0 +1,9 @@
+<UserControl x:Class="QuickSticky.ThemeSettingsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <TextBlock Style="{StaticResource SettingsSectionTitle}" Text="Theme" />
+        <TextBlock Style="{StaticResource SettingsBodyText}"
+                   Text="Appearance options will live here." />
+    </StackPanel>
+</UserControl>

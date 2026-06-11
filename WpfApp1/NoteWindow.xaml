@@ -270,11 +270,11 @@
                     <Grid Grid.Column="0"
                           Margin="0,0,8,0">
 
-                        <!-- <Grid.ContextMenu> -->
-                        <!--     <ContextMenu> -->
-                        <!--         <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" /> -->
-                        <!--     </ContextMenu> -->
-                        <!-- </Grid.ContextMenu> -->
+                        <Grid.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" />
+                            </ContextMenu>
+                        </Grid.ContextMenu>
 
                         <TextBlock x:Name="TitlePlaceholder"
                                    Text="Quick Note"
@@ -305,11 +305,11 @@
                             Background="Transparent"
                             MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
-                        <!-- <Border.ContextMenu> -->
-                        <!--     <ContextMenu> -->
-                        <!--         <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" /> -->
-                        <!--     </ContextMenu> -->
-                        <!-- </Border.ContextMenu> -->
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" />
+                            </ContextMenu>
+                        </Border.ContextMenu>
 
                     </Border>
 
@@ -351,15 +351,15 @@
                         <Paragraph Margin="0" />
                     </FlowDocument>
 
-                    <!-- <RichTextBox.ContextMenu> -->
-                    <!--     <ContextMenu> -->
-                    <!--         <MenuItem Header="Cut" Command="ApplicationCommands.Cut" /> -->
-                    <!--         <MenuItem Header="Copy" Command="ApplicationCommands.Copy" /> -->
-                    <!--         <MenuItem Header="Paste" Command="ApplicationCommands.Paste" /> -->
-                    <!--         <Separator /> -->
-                    <!--         <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" /> -->
-                    <!--     </ContextMenu> -->
-                    <!-- </RichTextBox.ContextMenu> -->
+                    <RichTextBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Cut" Command="ApplicationCommands.Cut" />
+                            <MenuItem Header="Copy" Command="ApplicationCommands.Copy" />
+                            <MenuItem Header="Paste" Command="ApplicationCommands.Paste" />
+                            <Separator />
+                            <MenuItem Header="Settings..." Click="SettingsMenuItem_Click" />
+                        </ContextMenu>
+                    </RichTextBox.ContextMenu>
 
                 </RichTextBox>
             </Grid>

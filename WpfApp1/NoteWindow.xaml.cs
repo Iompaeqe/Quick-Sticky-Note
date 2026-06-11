@@ -636,12 +636,7 @@ namespace QuickSticky
 
         private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                this,
-                "Settings will be added here later.",
-                "Note Settings",
-                MessageBoxButton.OK,
-                MessageBoxImage.Information);
+            SettingsWindow.ShowSettings();
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
