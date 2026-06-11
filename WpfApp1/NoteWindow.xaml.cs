@@ -40,6 +40,7 @@ namespace QuickSticky
         private bool _isLoading;
         private bool _isTitleEditing;
         private ResizableImageBlock _selectedImage;
+        private ResizableImageBlock _activeDrawingImage;
 
         private int _closeClicks;
         private DateTime _firstClickTime;
@@ -210,6 +211,13 @@ namespace QuickSticky
 
         private void Editor_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Escape && _activeDrawingImage != null)
+            {
+                ExitActiveDrawingMode();
+                e.Handled = true;
+                return;
+            }
+
             if (e.Key == Key.Delete && _selectedImage != null)
             {
                 RemoveImage(_selectedImage);
@@ -228,11 +236,26 @@ namespace QuickSticky
 
         private void Editor_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            HandlePointerOutsideActiveImage(e.OriginalSource as DependencyObject);
+        }
+
+        private void Window_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HandlePointerOutsideActiveImage(e.OriginalSource as DependencyObject);
+        }
+
+        private void HandlePointerOutsideActiveImage(DependencyObject source)
+        {
+            if (_activeDrawingImage != null &&
+                (source == null || !IsDescendantOf(source, _activeDrawingImage)))
+            {
+                ExitActiveDrawingMode();
+            }
+
             if (_selectedImage == null)
                 return;
 
-            if (e.OriginalSource is DependencyObject source &&
-                IsDescendantOf(source, _selectedImage))
+            if (source != null && IsDescendantOf(source, _selectedImage))
             {
                 return;
             }
@@ -347,6 +370,9 @@ namespace QuickSticky
             image.DeleteRequested += Image_DeleteRequested;
             image.FitRequested += Image_FitRequested;
             image.SizeChangedByUser += Image_SizeChangedByUser;
+            image.DrawingModeStarted += Image_DrawingModeStarted;
+            image.DrawingModeExited += Image_DrawingModeExited;
+            image.AnnotationChanged += Image_AnnotationChanged;
         }
 
         private void Image_Selected(object sender, EventArgs e)
@@ -376,6 +402,29 @@ namespace QuickSticky
             MarkDirty();
         }
 
+        private void Image_DrawingModeStarted(object sender, EventArgs e)
+        {
+            if (sender is not ResizableImageBlock image)
+                return;
+
+            if (_activeDrawingImage != null && !ReferenceEquals(_activeDrawingImage, image))
+                _activeDrawingImage.ExitDrawingMode();
+
+            _activeDrawingImage = image;
+            SelectImage(image);
+        }
+
+        private void Image_DrawingModeExited(object sender, EventArgs e)
+        {
+            if (ReferenceEquals(_activeDrawingImage, sender))
+                _activeDrawingImage = null;
+        }
+
+        private void Image_AnnotationChanged(object sender, EventArgs e)
+        {
+            MarkDirty();
+        }
+
         private void SelectImage(ResizableImageBlock image)
         {
             if (_selectedImage != null && !ReferenceEquals(_selectedImage, image))
@@ -393,12 +442,24 @@ namespace QuickSticky
             _selectedImage = null;
         }
 
+        private void ExitActiveDrawingMode()
+        {
+            _activeDrawingImage?.ExitDrawingMode();
+            _activeDrawingImage = null;
+            Editor.Focus();
+        }
+
         private void RemoveImage(ResizableImageBlock image)
         {
             var imageBlock = FindImageBlock(image);
 
             if (imageBlock == null)
                 return;
+
+            if (ReferenceEquals(_activeDrawingImage, image))
+                _activeDrawingImage = null;
+
+            NoteImageStorage.DeleteAssetFile(_path, image.InkFileName);
 
             var caretTarget = FindNextParagraph(imageBlock) ?? FindPreviousParagraph(imageBlock);
 
@@ -561,7 +622,7 @@ namespace QuickSticky
             try
             {
                 _model.Version = 2;
-                _model.Blocks = NoteDocumentConverter.ToBlocks(Editor.Document);
+                _model.Blocks = NoteDocumentConverter.ToBlocks(Editor.Document, _path);
                 _model.Content = NoteDocumentConverter.ToPlainText(_model.Blocks);
 
                 NoteStorage.Save(_path, _model);
@@ -607,6 +668,13 @@ namespace QuickSticky
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key == Key.Escape && _activeDrawingImage != null)
+            {
+                ExitActiveDrawingMode();
+                e.Handled = true;
+                return;
+            }
+
             if (e.Key == Key.S &&
                 Keyboard.Modifiers.HasFlag(ModifierKeys.Control))
             {

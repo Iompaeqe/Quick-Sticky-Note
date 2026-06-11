@@ -58,6 +58,8 @@ namespace QuickSticky
         public string Text { get; set; } = "";
 
         public string FileName { get; set; } = "";
+        public string InkFileName { get; set; } = "";
+
         public double Width { get; set; }
         public double Height { get; set; }
     }

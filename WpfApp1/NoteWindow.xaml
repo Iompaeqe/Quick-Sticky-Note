@@ -14,6 +14,7 @@
         LocationChanged="Window_LocationOrSizeChanged"
         SizeChanged="Window_LocationOrSizeChanged"
         Loaded="Window_Loaded"
+        PreviewMouseDown="Window_PreviewMouseDown"
         KeyDown="Window_KeyDown">
 
     <Window.Resources>

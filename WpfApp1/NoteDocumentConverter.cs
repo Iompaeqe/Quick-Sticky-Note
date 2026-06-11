@@ -37,7 +37,7 @@ namespace QuickSticky
             return document;
         }
 
-        public static List<NoteBlockModel> ToBlocks(FlowDocument document)
+        public static List<NoteBlockModel> ToBlocks(FlowDocument document, string notePath)
         {
             var blocks = new List<NoteBlockModel>();
 
@@ -47,7 +47,7 @@ namespace QuickSticky
                 {
                     if (TryGetParagraphImage(paragraph, out var paragraphImage))
                     {
-                        blocks.Add(CreateImageModel(paragraphImage));
+                        blocks.Add(CreateImageModel(paragraphImage, notePath));
                         continue;
                     }
 
@@ -63,7 +63,7 @@ namespace QuickSticky
                 if (block is BlockUIContainer container &&
                     container.Child is ResizableImageBlock image)
                 {
-                    blocks.Add(CreateImageModel(image));
+                    blocks.Add(CreateImageModel(image, notePath));
 
                     continue;
                 }
@@ -193,6 +193,9 @@ namespace QuickSticky
                 return;
 
             var imagePath = NoteImageStorage.GetImagePath(notePath, block.FileName);
+            var inkPath = string.IsNullOrWhiteSpace(block.InkFileName)
+                ? ""
+                : NoteImageStorage.GetInkPath(notePath, block.InkFileName);
 
             if (!File.Exists(imagePath))
             {
@@ -206,7 +209,9 @@ namespace QuickSticky
                     Path.GetFileName(block.FileName),
                     imagePath,
                     block.Width,
-                    block.Height);
+                    block.Height,
+                    Path.GetFileName(block.InkFileName),
+                    inkPath);
 
                 configureImage?.Invoke(image);
                 document.Blocks.Add(CreateImageBlock(image));
@@ -227,12 +232,15 @@ namespace QuickSticky
             return string.Equals(block.Type, ImageType, StringComparison.OrdinalIgnoreCase);
         }
 
-        private static NoteBlockModel CreateImageModel(ResizableImageBlock image)
+        private static NoteBlockModel CreateImageModel(ResizableImageBlock image, string notePath)
         {
+            var inkFileName = image.SaveInk(notePath);
+
             return new NoteBlockModel
             {
                 Type = ImageType,
                 FileName = image.FileName,
+                InkFileName = inkFileName,
                 Width = image.DisplayWidth,
                 Height = image.DisplayHeight
             };
