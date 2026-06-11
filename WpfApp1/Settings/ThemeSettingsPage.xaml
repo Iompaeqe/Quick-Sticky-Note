@@ -9,7 +9,9 @@
                  Background="Transparent"
                  BorderThickness="0"
                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ScrollViewer.VerticalScrollBarVisibility="Disabled"
                  ItemContainerStyle="{StaticResource ThemeOptionItemStyle}"
+                 PreviewMouseWheel="ThemeList_PreviewMouseWheel"
                  SelectionChanged="ThemeList_SelectionChanged">
             <ListBox.ItemTemplate>
                 <DataTemplate>

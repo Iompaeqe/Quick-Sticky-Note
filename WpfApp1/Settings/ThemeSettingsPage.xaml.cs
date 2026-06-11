@@ -1,4 +1,6 @@
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace QuickSticky
 {
@@ -27,6 +29,33 @@ namespace QuickSticky
                 return;
 
             ThemeManager.ApplyTheme(theme.Id);
+        }
+
+        private void ThemeList_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            var scrollViewer = FindParent<ScrollViewer>(this);
+
+            if (scrollViewer == null)
+                return;
+
+            e.Handled = true;
+            scrollViewer.ScrollToVerticalOffset(scrollViewer.VerticalOffset - e.Delta);
+        }
+
+        private static T FindParent<T>(System.Windows.DependencyObject child)
+            where T : System.Windows.DependencyObject
+        {
+            var parent = VisualTreeHelper.GetParent(child);
+
+            while (parent != null)
+            {
+                if (parent is T match)
+                    return match;
+
+                parent = VisualTreeHelper.GetParent(parent);
+            }
+
+            return null;
         }
 
     }
