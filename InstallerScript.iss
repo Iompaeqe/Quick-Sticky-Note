@@ -4,7 +4,7 @@
 
 ; Pull the version straight from the just-published exe so it always matches the
 ; csproj <Version>. Requires `dotnet publish` to have run first (the build
-; scripts in "Dev Notes.txt" do this before invoking ISCC).
+; scripts in "WpfApp1\Docs\Dev Notes.txt" do this before invoking ISCC).
 #define MyAppVersion GetVersionNumbersString(SourcePath + MyAppPublishDir + "\" + MyAppExeName)
 
 [Setup]
