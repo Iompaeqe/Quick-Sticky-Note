@@ -1,4 +1,4 @@
-<UserControl x:Class="QuickSticky.ResizableImageBlock"
+﻿<UserControl x:Class="QuickSticky.ResizableImageBlock"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              Focusable="True"
@@ -10,39 +10,298 @@
              MouseLeave="Root_MouseLeave"
              MouseLeftButtonDown="Root_MouseLeftButtonDown">
 
-    <Border x:Name="Chrome"
-            Background="#06000000"
-            BorderBrush="Transparent"
-            BorderThickness="1"
-            CornerRadius="5"
-            Padding="2">
-        <Grid>
-            <Image x:Name="ImageElement"
-                   Stretch="Fill"
-                   SnapsToDevicePixels="True" />
+    <UserControl.Resources>
+        <Style x:Key="DrawingToolToggleStyle" TargetType="{x:Type ToggleButton}">
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="#EFFFFFFF" />
+            <Setter Property="Background" Value="#1FFFFFFF" />
+            <Setter Property="BorderBrush" Value="#55FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="Root"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#35FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#DDFFFFFF" />
+                                <Setter Property="Foreground" Value="#FF111111" />
+                                <Setter Property="BorderBrush" Value="#FFFFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <Border x:Name="ResizeHandle"
-                    Width="18"
-                    Height="18"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom"
-                    Background="#E8FFFFFF"
-                    BorderBrush="#AA000000"
-                    BorderThickness="1"
-                    CornerRadius="4"
-                    Cursor="SizeNWSE"
-                    MouseLeftButtonDown="ResizeHandle_MouseLeftButtonDown"
-                    MouseLeftButtonUp="ResizeHandle_MouseLeftButtonUp"
-                    MouseMove="ResizeHandle_MouseMove">
-                <Grid Margin="3">
-                    <Path Stroke="#99000000"
-                          StrokeThickness="1.4"
-                          Data="M 7 0 L 0 7" />
-                    <Path Stroke="#99000000"
-                          StrokeThickness="1.4"
-                          Data="M 11 0 L 0 11" />
-                </Grid>
-            </Border>
-        </Grid>
-    </Border>
+        <Style x:Key="SliderTrackButtonStyle" TargetType="{x:Type RepeatButton}">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Background" Value="#28FFFFFF" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Border Height="4"
+                                VerticalAlignment="Center"
+                                CornerRadius="2"
+                                Background="{TemplateBinding Background}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderTrackActiveButtonStyle"
+               TargetType="{x:Type RepeatButton}"
+               BasedOn="{StaticResource SliderTrackButtonStyle}">
+            <Setter Property="Background" Value="#B8FFFFFF" />
+        </Style>
+
+        <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
+            <Setter Property="Width" Value="14" />
+            <Setter Property="Height" Value="14" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="Root"
+                                Width="{TemplateBinding Width}"
+                                Height="{TemplateBinding Height}"
+                                CornerRadius="7"
+                                Background="#EFFFFFFF"
+                                BorderBrush="#AA000000"
+                                BorderThickness="1">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5"
+                                                  ShadowDepth="0"
+                                                  Opacity="0.35" />
+                            </Border.Effect>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#FFFFFFFF" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#FFFFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="#FF111111" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="#FFFFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AnnotationSliderStyle" TargetType="{x:Type Slider}">
+            <Setter Property="Height" Value="22" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Slider}">
+                        <Grid Height="{TemplateBinding Height}">
+                            <Track x:Name="PART_Track"
+                                   VerticalAlignment="Center">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static Slider.DecreaseLarge}"
+                                                  Style="{StaticResource SliderTrackActiveButtonStyle}" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource SliderThumbStyle}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static Slider.IncreaseLarge}"
+                                                  Style="{StaticResource SliderTrackButtonStyle}" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Vertical">
+        <Border x:Name="DrawingToolbar"
+                HorizontalAlignment="Left"
+                Margin="0,0,0,4"
+                Padding="6,4"
+                Background="#CC181818"
+                BorderBrush="#88FFFFFF"
+                BorderThickness="1"
+                CornerRadius="8"
+                Visibility="Collapsed">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border x:Name="ColorGradient"
+                        Width="112"
+                        Height="19"
+                        Margin="0,0,7,0"
+                        BorderBrush="#77FFFFFF"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        Cursor="Cross"
+                        SizeChanged="ColorGradient_SizeChanged"
+                        MouseLeftButtonDown="ColorGradient_MouseLeftButtonDown"
+                        MouseLeftButtonUp="ColorGradient_MouseLeftButtonUp"
+                        MouseMove="ColorGradient_MouseMove">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                            <GradientStop Color="#FFFF4F4F" Offset="0" />
+                            <GradientStop Color="#FFFFD84D" Offset="0.17" />
+                            <GradientStop Color="#FF7CFF8A" Offset="0.34" />
+                            <GradientStop Color="#FF62D2FF" Offset="0.51" />
+                            <GradientStop Color="#FF8E78FF" Offset="0.68" />
+                            <GradientStop Color="#FFFF67D8" Offset="0.84" />
+                            <GradientStop Color="#FFFFFFFF" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                    <Grid IsHitTestVisible="False">
+                        <Border x:Name="ColorMarker"
+                                Width="7"
+                                Height="21"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Background="#EFFFFFFF"
+                                BorderBrush="#FF111111"
+                                BorderThickness="1"
+                                CornerRadius="3" />
+                    </Grid>
+                </Border>
+
+                <ToggleButton x:Name="EraserToggle"
+                              Style="{StaticResource DrawingToolToggleStyle}"
+                              ToolTip="Eraser"
+                              Checked="EraserToggle_Changed"
+                              Unchecked="EraserToggle_Changed">
+                    <Viewbox Width="14" Height="14">
+                        <Grid Width="16" Height="16">
+                            <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}"
+                                  Data="M 2 10 L 9 3 L 14 8 L 7 15 L 2 15 Z" />
+                            <Path Stroke="#88000000"
+                                  StrokeThickness="1"
+                                  Data="M 5.5 6.5 L 10.5 11.5 M 7 15 L 14 15" />
+                        </Grid>
+                    </Viewbox>
+                </ToggleButton>
+
+                <TextBlock Text="Size"
+                           Foreground="#CCFFFFFF"
+                           FontSize="11"
+                           VerticalAlignment="Center"
+                           Margin="0,0,5,0" />
+                <Slider x:Name="PenSizeSlider"
+                        Width="64"
+                        Minimum="1"
+                        Maximum="12"
+                        Value="3"
+                        TickFrequency="1"
+                        IsSnapToTickEnabled="True"
+                        IsMoveToPointEnabled="True"
+                        VerticalAlignment="Center"
+                        Style="{StaticResource AnnotationSliderStyle}"
+                        ValueChanged="PenSizeSlider_ValueChanged" />
+                <TextBlock x:Name="PenSizeText"
+                           Text="3"
+                           Width="16"
+                           Foreground="#EFFFFFFF"
+                           FontSize="11"
+                           TextAlignment="Right"
+                           VerticalAlignment="Center"
+                           Margin="3,0,0,0" />
+            </StackPanel>
+        </Border>
+
+        <Border x:Name="Chrome"
+                Background="#06000000"
+                BorderBrush="Transparent"
+                BorderThickness="1"
+                CornerRadius="5"
+                Padding="2">
+            <Grid x:Name="ImageSurface">
+                <Image x:Name="ImageElement"
+                       Stretch="Fill"
+                       SnapsToDevicePixels="True" />
+
+                <InkCanvas x:Name="InkOverlay"
+                           Background="Transparent"
+                           EditingMode="None"
+                           Focusable="True"
+                           KeyDown="Root_KeyDown"
+                           IsHitTestVisible="False" />
+
+                <Button x:Name="PenButton"
+                        Width="24"
+                        Height="24"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Margin="0,4,4,0"
+                        Cursor="Hand"
+                        Content="&#x270E;"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Background="#66181818"
+                        BorderBrush="#88FFFFFF"
+                        Foreground="#EFFFFFFF"
+                        Click="PenButton_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <Border x:Name="Root"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="6">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="Root" Property="Background" Value="#88303030" />
+                                    <Setter TargetName="Root" Property="BorderBrush" Value="#CCFFFFFF" />
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="Root" Property="Background" Value="#AAFFFFFF" />
+                                    <Setter Property="Foreground" Value="#FF111111" />
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Border x:Name="ResizeHandle"
+                        Width="18"
+                        Height="18"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Background="#E8FFFFFF"
+                        BorderBrush="#AA000000"
+                        BorderThickness="1"
+                        CornerRadius="4"
+                        Cursor="SizeNWSE"
+                        MouseLeftButtonDown="ResizeHandle_MouseLeftButtonDown"
+                        MouseLeftButtonUp="ResizeHandle_MouseLeftButtonUp"
+                        MouseMove="ResizeHandle_MouseMove">
+                    <Grid Margin="3">
+                        <Path Stroke="#99000000"
+                              StrokeThickness="1.4"
+                              Data="M 7 0 L 0 7" />
+                        <Path Stroke="#99000000"
+                              StrokeThickness="1.4"
+                              Data="M 11 0 L 0 11" />
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </StackPanel>
 </UserControl>

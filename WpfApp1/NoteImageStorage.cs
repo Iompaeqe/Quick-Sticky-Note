@@ -15,7 +15,23 @@ namespace QuickSticky
 
         public static string GetImagePath(string notePath, string fileName)
         {
+            return GetAssetFilePath(notePath, fileName);
+        }
+
+        public static string GetInkPath(string notePath, string fileName)
+        {
+            return GetAssetFilePath(notePath, fileName);
+        }
+
+        public static string GetAssetFilePath(string notePath, string fileName)
+        {
             return Path.Combine(GetAssetFolderPath(notePath), Path.GetFileName(fileName));
+        }
+
+        public static string GenerateInkFileName(string imageFileName)
+        {
+            var baseName = Path.GetFileNameWithoutExtension(imageFileName);
+            return $"{baseName}_ink.isf";
         }
 
         public static string SaveClipboardBitmap(string notePath, BitmapSource bitmap)
@@ -61,6 +77,24 @@ namespace QuickSticky
             catch
             {
                 // Deleting the note should not fail because a stale asset cannot be removed.
+            }
+        }
+
+        public static void DeleteAssetFile(string notePath, string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+                return;
+
+            try
+            {
+                var filePath = GetAssetFilePath(notePath, fileName);
+
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
+            }
+            catch
+            {
+                // Stale image sidecars should not prevent normal note saves.
             }
         }
 
