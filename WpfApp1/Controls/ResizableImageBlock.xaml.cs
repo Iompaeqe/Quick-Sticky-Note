@@ -53,6 +53,8 @@ namespace QuickSticky
         public ResizableImageBlock()
         {
             InitializeComponent();
+            ThemeManager.ThemeChanged += ThemeManager_ThemeChanged;
+            Unloaded += ResizableImageBlock_Unloaded;
             ConfigureInkCanvas();
         }
 
@@ -351,29 +353,49 @@ namespace QuickSticky
             var isActive = _isSelected || _isHovered || _isResizing || _isDrawingModeActive;
 
             Chrome.BorderBrush = isActive
-                ? new SolidColorBrush(_isDrawingModeActive
-                    ? Color.FromArgb(0xDD, 0xFF, 0xFF, 0xFF)
-                    : Color.FromArgb(0x88, 0xFF, 0xFF, 0xFF))
-                : Brushes.Transparent;
+                ? GetThemeBrush(
+                    _isDrawingModeActive
+                        ? "ImageChromeActiveBorderBrush"
+                        : "ImageChromeHoverBorderBrush",
+                    Brushes.White)
+                : GetThemeBrush("ImageChromeBorderBrush", Brushes.Transparent);
 
             Chrome.Background = isActive
-                ? new SolidColorBrush(Color.FromArgb(0x16, 0xFF, 0xFF, 0xFF))
-                : new SolidColorBrush(Color.FromArgb(0x06, 0x00, 0x00, 0x00));
+                ? GetThemeBrush("ImageChromeHoverBackgroundBrush", Brushes.Transparent)
+                : GetThemeBrush("ImageChromeBackgroundBrush", Brushes.Transparent);
 
             ResizeHandle.Opacity = isActive ? 1 : 0.72;
             PenButton.Opacity = isActive ? 1 : 0.82;
             PenButton.Foreground = _isDrawingModeActive
-                ? new SolidColorBrush(Color.FromArgb(0xFF, 0x11, 0x11, 0x11))
-                : new SolidColorBrush(Color.FromArgb(0xEF, 0xFF, 0xFF, 0xFF));
+                ? GetThemeBrush("DrawingToolCheckedForegroundBrush", Brushes.Black)
+                : GetThemeBrush("TextPrimaryBrush", Brushes.White);
             PenButton.Background = _isDrawingModeActive
-                ? new SolidColorBrush(Color.FromArgb(0xDD, 0xFF, 0xFF, 0xFF))
-                : Brushes.Transparent;
+                ? GetThemeBrush("DrawingToolCheckedBrush", Brushes.White)
+                : GetThemeBrush("ChromeButtonBackgroundBrush", Brushes.Transparent);
 
             DrawingToolbar.Visibility = _isDrawingModeActive
                 ? Visibility.Visible
                 : Visibility.Collapsed;
 
             UpdateControlSize();
+        }
+
+        private void ThemeManager_ThemeChanged(object sender, EventArgs e)
+        {
+            UpdateChrome();
+        }
+
+        private void ResizableImageBlock_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ThemeManager.ThemeChanged -= ThemeManager_ThemeChanged;
+            Unloaded -= ResizableImageBlock_Unloaded;
+        }
+
+        private Brush GetThemeBrush(string key, Brush fallback)
+        {
+            return TryFindResource(key) as Brush ??
+                   Application.Current?.TryFindResource(key) as Brush ??
+                   fallback;
         }
 
         private void EnterDrawingMode()

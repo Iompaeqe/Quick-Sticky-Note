@@ -4,52 +4,52 @@
     <!-- Shared visual language for settings pages. Pages reference these by key. -->
 
     <Style x:Key="SettingsSectionTitle" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#F4FFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI Semibold" />
-        <Setter Property="FontSize" Value="21" />
-        <Setter Property="Margin" Value="0,0,0,16" />
+        <Setter Property="FontSize" Value="{DynamicResource SettingsSectionTitleFontSize}" />
+        <Setter Property="Margin" Value="{DynamicResource SettingsSectionTitleMargin}" />
     </Style>
 
     <Style x:Key="SettingsLabel" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#F0FFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontSize" Value="{DynamicResource SettingsLabelFontSize}" />
         <Setter Property="FontWeight" Value="SemiBold" />
     </Style>
 
     <Style x:Key="SettingsBodyText" TargetType="TextBlock">
-        <Setter Property="Foreground" Value="#B6FFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBodyBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource SettingsBodyFontSize}" />
         <Setter Property="TextWrapping" Value="Wrap" />
-        <Setter Property="LineHeight" Value="19" />
+        <Setter Property="LineHeight" Value="{DynamicResource SettingsBodyLineHeight}" />
     </Style>
 
     <Style x:Key="SettingsInfoCard" TargetType="Border">
-        <Setter Property="CornerRadius" Value="9" />
-        <Setter Property="Background" Value="#14FFFFFF" />
-        <Setter Property="BorderBrush" Value="#22FFFFFF" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Padding" Value="14,12" />
+        <Setter Property="CornerRadius" Value="{DynamicResource InnerCornerRadius}" />
+        <Setter Property="Background" Value="{DynamicResource InfoCardBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource InfoCardBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource DefaultBorderThickness}" />
+        <Setter Property="Padding" Value="{DynamicResource InfoCardPadding}" />
     </Style>
 
     <Style x:Key="SettingsButton" TargetType="Button">
-        <Setter Property="Height" Value="36" />
-        <Setter Property="MinWidth" Value="170" />
+        <Setter Property="Height" Value="{DynamicResource SettingsButtonHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource SettingsButtonMinWidth}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Foreground" Value="#F2FFFFFF" />
+        <Setter Property="Foreground" Value="{DynamicResource ButtonForegroundBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource SettingsButtonFontSize}" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="18,0" />
-        <Setter Property="Background" Value="#18FFFFFF" />
-        <Setter Property="BorderBrush" Value="#35FFFFFF" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="{DynamicResource SettingsButtonPadding}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource DefaultBorderThickness}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="8"
+                            CornerRadius="{DynamicResource ControlCornerRadius}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -60,11 +60,15 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#28FFFFFF" />
-                            <Setter TargetName="Root" Property="BorderBrush" Value="#5FFFFFFF" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ButtonHoverBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource ButtonHoverBorderBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#38FFFFFF" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource ButtonPressedBorderBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="{DynamicResource DisabledOpacity}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -73,22 +77,22 @@
     </Style>
 
     <Style x:Key="SettingsDangerButton" TargetType="Button">
-        <Setter Property="Height" Value="36" />
-        <Setter Property="MinWidth" Value="170" />
+        <Setter Property="Height" Value="{DynamicResource SettingsButtonHeight}" />
+        <Setter Property="MinWidth" Value="{DynamicResource SettingsButtonMinWidth}" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="Foreground" Value="#FFC7C7" />
+        <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
         <Setter Property="FontFamily" Value="Segoe UI" />
-        <Setter Property="FontSize" Value="13" />
+        <Setter Property="FontSize" Value="{DynamicResource SettingsButtonFontSize}" />
         <Setter Property="Cursor" Value="Hand" />
-        <Setter Property="Padding" Value="18,0" />
-        <Setter Property="Background" Value="#22FF5A5A" />
-        <Setter Property="BorderBrush" Value="#55FF6B6B" />
-        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="{DynamicResource SettingsButtonPadding}" />
+        <Setter Property="Background" Value="{DynamicResource DangerBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource DangerBorderBrush}" />
+        <Setter Property="BorderThickness" Value="{DynamicResource DefaultBorderThickness}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="Root"
-                            CornerRadius="8"
+                            CornerRadius="{DynamicResource ControlCornerRadius}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
@@ -99,12 +103,15 @@
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#3AFF5A5A" />
-                            <Setter TargetName="Root" Property="BorderBrush" Value="#88FF6B6B" />
-                            <Setter Property="Foreground" Value="White" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource DangerHoverBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource DangerBorderBrush}" />
+                            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="Root" Property="Background" Value="#55FF5A5A" />
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource DangerPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="{DynamicResource DisabledOpacity}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -119,30 +126,59 @@
             <Setter.Value>
                 <ControlTemplate TargetType="CheckBox">
                     <Border x:Name="Track"
-                            Width="44"
-                            Height="24"
-                            CornerRadius="12"
-                            Background="#2EFFFFFF"
-                            BorderBrush="#40FFFFFF"
-                            BorderThickness="1">
+                            Width="{DynamicResource ToggleTrackWidth}"
+                            Height="{DynamicResource ToggleTrackHeight}"
+                            CornerRadius="{DynamicResource ToggleTrackCornerRadius}"
+                            Background="{DynamicResource ButtonBackgroundBrush}"
+                            BorderBrush="{DynamicResource ButtonBorderBrush}"
+                            BorderThickness="{DynamicResource DefaultBorderThickness}">
                         <Border x:Name="Knob"
-                                Width="18"
-                                Height="18"
-                                CornerRadius="9"
+                                Width="{DynamicResource ToggleKnobSize}"
+                                Height="{DynamicResource ToggleKnobSize}"
+                                CornerRadius="{DynamicResource ToggleKnobCornerRadius}"
                                 HorizontalAlignment="Left"
-                                Margin="2,0,0,0"
-                                Background="#F2FFFFFF" />
+                                Margin="{DynamicResource ToggleKnobOffMargin}"
+                                Background="{DynamicResource TextPrimaryBrush}" />
                     </Border>
 
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
-                            <Setter TargetName="Track" Property="Background" Value="#4C8DFF" />
-                            <Setter TargetName="Track" Property="BorderBrush" Value="#6BA4FF" />
+                            <Setter TargetName="Track" Property="Background" Value="{DynamicResource AccentBrush}" />
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource AccentHoverBrush}" />
                             <Setter TargetName="Knob" Property="HorizontalAlignment" Value="Right" />
-                            <Setter TargetName="Knob" Property="Margin" Value="0,0,2,0" />
+                            <Setter TargetName="Knob" Property="Margin" Value="{DynamicResource ToggleKnobOnMargin}" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="Track" Property="BorderBrush" Value="#80FFFFFF" />
+                            <Setter TargetName="Track" Property="BorderBrush" Value="{DynamicResource ButtonHoverBorderBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ThemeOptionItemStyle" TargetType="ListBoxItem">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Margin" Value="{DynamicResource ThemeOptionMargin}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="Root"
+                            CornerRadius="{DynamicResource ControlCornerRadius}"
+                            Background="{DynamicResource ListItemBackgroundBrush}"
+                            BorderBrush="{DynamicResource ListItemBorderBrush}"
+                            BorderThickness="{DynamicResource DefaultBorderThickness}"
+                            Padding="{DynamicResource ThemeOptionPadding}">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ListItemHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource ListItemSelectedBrush}" />
+                            <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource ListItemSelectedBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

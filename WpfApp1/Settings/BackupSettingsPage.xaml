@@ -35,7 +35,7 @@
         <Button x:Name="RestoreButton"
                 Style="{StaticResource SettingsButton}"
                 Margin="0,24,0,0"
-                Content="Restore backups…"
+                Content="Restore backups&#x2026;"
                 Click="RestoreBackups_Click" />
 
         <Button x:Name="OpenFolderButton"

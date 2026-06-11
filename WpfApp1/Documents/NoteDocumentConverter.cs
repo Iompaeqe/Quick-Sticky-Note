@@ -150,15 +150,18 @@ namespace QuickSticky
 
         private static FlowDocument CreateDocument()
         {
-            return new FlowDocument
+            var document = new FlowDocument
             {
                 Background = Brushes.Transparent,
                 ColumnWidth = 100000,
                 FontFamily = new FontFamily("Consolas"),
                 FontSize = 14,
-                Foreground = new SolidColorBrush(Color.FromArgb(0xF2, 0xFF, 0xFF, 0xFF)),
                 PagePadding = new Thickness(0)
             };
+
+            document.SetResourceReference(TextElement.ForegroundProperty, "TextPrimaryBrush");
+
+            return document;
         }
 
         private static void AddModelBlock(

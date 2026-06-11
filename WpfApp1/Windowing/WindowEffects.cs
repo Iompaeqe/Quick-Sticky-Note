@@ -18,6 +18,15 @@ namespace QuickSticky
             EnableBlurBehind(window, hwnd);
         }
 
+        public static void RefreshOpenWindows()
+        {
+            if (Application.Current == null)
+                return;
+
+            foreach (Window window in Application.Current.Windows)
+                Apply(window);
+        }
+
         private static void ApplyDwmRoundedCorners(IntPtr hwnd)
         {
             int preference = (int)NoteWindowSettings.CornerPreference;
@@ -38,9 +47,11 @@ namespace QuickSticky
 
             var accent = new AccentPolicy
             {
-                AccentState = AccentState.ACCENT_ENABLE_BLURBEHIND,
+                AccentState = ThemeManager.GetBlurEnabled()
+                    ? AccentState.ACCENT_ENABLE_BLURBEHIND
+                    : AccentState.ACCENT_DISABLED,
                 AccentFlags = 0,
-                GradientColor = NoteWindowSettings.BlurTintColor,
+                GradientColor = ThemeManager.GetBlurTintColor(),
                 AnimationId = 0
             };
 

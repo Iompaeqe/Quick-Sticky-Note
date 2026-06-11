@@ -29,6 +29,7 @@ namespace QuickSticky
                 "Notes");
 
             Directory.CreateDirectory(NotesDir);
+            ThemeManager.ApplySavedTheme();
 
             bool createdNew;
 

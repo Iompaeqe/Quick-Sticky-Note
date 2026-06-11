@@ -10,22 +10,22 @@
         <TextBlock x:Name="VersionText"
                    Style="{StaticResource SettingsBodyText}"
                    Margin="0,8,0,0"
-                   Text="Version : …" />
+                   Text="Version : &#x2026;" />
 
         <TextBlock Style="{StaticResource SettingsBodyText}" Margin="0,6,0,0">
             <Hyperlink NavigateUri="https://github.com/Iompaeqe/Quick-Sticky-Note?tab=MIT-1-ov-file"
-                       Foreground="#7FB4FF"
+                       Foreground="{DynamicResource HyperlinkBrush}"
                        RequestNavigate="Hyperlink_RequestNavigate">MIT License</Hyperlink>
         </TextBlock>
 
         <TextBlock Style="{StaticResource SettingsBodyText}"
                    Margin="0,6,0,0"
-                   Text="Copyright © 2026 Iompaeqe(Iompa)." />
+                   Text="Copyright &#x00A9; 2026 Iompaeqe(Iompa)." />
 
         <Button x:Name="UpdateButton"
                 Style="{StaticResource SettingsButton}"
                 Margin="0,24,0,0"
-                Content="Checking for updates…"
+                Content="Checking for updates&#x2026;"
                 IsEnabled="False"
                 Click="UpdateButton_Click" />
 

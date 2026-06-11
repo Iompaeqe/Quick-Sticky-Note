@@ -1,9 +1,27 @@
 <UserControl x:Class="QuickSticky.ThemeSettingsPage"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Loaded="Page_Loaded">
     <StackPanel>
         <TextBlock Style="{StaticResource SettingsSectionTitle}" Text="Theme" />
-        <TextBlock Style="{StaticResource SettingsBodyText}"
-                   Text="Appearance options will live here." />
+
+        <ListBox x:Name="ThemeList"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 ItemContainerStyle="{StaticResource ThemeOptionItemStyle}"
+                 SelectionChanged="ThemeList_SelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <TextBlock Text="{Binding Name}"
+                                   Style="{StaticResource SettingsLabel}" />
+                        <TextBlock Text="{Binding Description}"
+                                   Style="{StaticResource SettingsBodyText}"
+                                   Margin="0,4,0,0" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </UserControl>

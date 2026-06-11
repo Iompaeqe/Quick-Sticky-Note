@@ -8,6 +8,8 @@ namespace QuickSticky
     {
         public int Version { get; set; } = 1;
 
+        public string ThemeId { get; set; } = "AcrylicGlass";
+
         public bool EnableAutoBackups { get; set; } = true;
     }
 }

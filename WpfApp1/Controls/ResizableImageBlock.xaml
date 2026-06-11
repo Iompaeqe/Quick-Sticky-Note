@@ -12,15 +12,15 @@
 
     <UserControl.Resources>
         <Style x:Key="DrawingToolToggleStyle" TargetType="{x:Type ToggleButton}">
-            <Setter Property="Width" Value="28" />
-            <Setter Property="Height" Value="22" />
-            <Setter Property="Margin" Value="0,0,6,0" />
+            <Setter Property="Width" Value="{DynamicResource DrawingToolWidth}" />
+            <Setter Property="Height" Value="{DynamicResource DrawingToolHeight}" />
+            <Setter Property="Margin" Value="{DynamicResource DrawingToolMargin}" />
             <Setter Property="Padding" Value="0" />
-            <Setter Property="FontSize" Value="11" />
-            <Setter Property="Foreground" Value="#EFFFFFFF" />
-            <Setter Property="Background" Value="#1FFFFFFF" />
-            <Setter Property="BorderBrush" Value="#55FFFFFF" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontSize" Value="{DynamicResource DrawingToolFontSize}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource DrawingToolBackgroundBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource DrawingToolBorderBrush}" />
+            <Setter Property="BorderThickness" Value="{DynamicResource DefaultBorderThickness}" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -29,18 +29,18 @@
                                 Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="6">
+                                CornerRadius="{DynamicResource SmallControlCornerRadius}">
                             <ContentPresenter HorizontalAlignment="Center"
                                               VerticalAlignment="Center" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#35FFFFFF" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource DrawingToolHoverBrush}" />
                             </Trigger>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#DDFFFFFF" />
-                                <Setter Property="Foreground" Value="#FF111111" />
-                                <Setter Property="BorderBrush" Value="#FFFFFFFF" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource DrawingToolCheckedBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource DrawingToolCheckedForegroundBrush}" />
+                                <Setter Property="BorderBrush" Value="{DynamicResource DrawingToolCheckedBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -51,7 +51,7 @@
         <Style x:Key="SliderTrackButtonStyle" TargetType="{x:Type RepeatButton}">
             <Setter Property="Focusable" Value="False" />
             <Setter Property="IsTabStop" Value="False" />
-            <Setter Property="Background" Value="#28FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource SliderTrackBrush}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type RepeatButton}">
@@ -67,7 +67,7 @@
         <Style x:Key="SliderTrackActiveButtonStyle"
                TargetType="{x:Type RepeatButton}"
                BasedOn="{StaticResource SliderTrackButtonStyle}">
-            <Setter Property="Background" Value="#B8FFFFFF" />
+            <Setter Property="Background" Value="{DynamicResource SliderTrackActiveBrush}" />
         </Style>
 
         <Style x:Key="SliderThumbStyle" TargetType="{x:Type Thumb}">
@@ -81,23 +81,24 @@
                                 Width="{TemplateBinding Width}"
                                 Height="{TemplateBinding Height}"
                                 CornerRadius="7"
-                                Background="#EFFFFFFF"
-                                BorderBrush="#AA000000"
-                                BorderThickness="1">
+                                Background="{DynamicResource SliderThumbBrush}"
+                                BorderBrush="{DynamicResource ResizeHandleBorderBrush}"
+                                BorderThickness="{DynamicResource DefaultBorderThickness}">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="5"
                                                   ShadowDepth="0"
+                                                  Color="{DynamicResource ShadowColor}"
                                                   Opacity="0.35" />
                             </Border.Effect>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#FFFFFFFF" />
-                                <Setter TargetName="Root" Property="BorderBrush" Value="#FFFFFFFF" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource TextPrimaryBrush}" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}" />
                             </Trigger>
                             <Trigger Property="IsDragging" Value="True">
-                                <Setter TargetName="Root" Property="Background" Value="#FF111111" />
-                                <Setter TargetName="Root" Property="BorderBrush" Value="#FFFFFFFF" />
+                                <Setter TargetName="Root" Property="Background" Value="{DynamicResource SliderThumbPressedBrush}" />
+                                <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource TextPrimaryBrush}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -137,20 +138,20 @@
         <Border x:Name="DrawingToolbar"
                 HorizontalAlignment="Left"
                 Margin="0,0,0,4"
-                Padding="6,4"
-                Background="#CC181818"
-                BorderBrush="#88FFFFFF"
-                BorderThickness="1"
-                CornerRadius="8"
+                Padding="{DynamicResource DrawingToolbarPadding}"
+                Background="{DynamicResource DrawingToolbarBackgroundBrush}"
+                BorderBrush="{DynamicResource DrawingToolbarBorderBrush}"
+                BorderThickness="{DynamicResource DefaultBorderThickness}"
+                CornerRadius="{DynamicResource DrawingToolbarCornerRadius}"
                 Visibility="Collapsed">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                 <Border x:Name="ColorGradient"
                         Width="112"
                         Height="19"
                         Margin="0,0,7,0"
-                        BorderBrush="#77FFFFFF"
-                        BorderThickness="1"
-                        CornerRadius="5"
+                        BorderBrush="{DynamicResource ButtonHoverBorderBrush}"
+                        BorderThickness="{DynamicResource DefaultBorderThickness}"
+                        CornerRadius="{DynamicResource SmallControlCornerRadius}"
                         Cursor="Cross"
                         SizeChanged="ColorGradient_SizeChanged"
                         MouseLeftButtonDown="ColorGradient_MouseLeftButtonDown"
@@ -173,9 +174,9 @@
                                 Height="21"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Background="#EFFFFFFF"
-                                BorderBrush="#FF111111"
-                                BorderThickness="1"
+                                Background="{DynamicResource SliderThumbBrush}"
+                                BorderBrush="{DynamicResource ResizeHandleGlyphBrush}"
+                                BorderThickness="{DynamicResource DefaultBorderThickness}"
                                 CornerRadius="3" />
                     </Grid>
                 </Border>
@@ -189,7 +190,7 @@
                         <Grid Width="16" Height="16">
                             <Path Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ToggleButton}}}"
                                   Data="M 2 10 L 9 3 L 14 8 L 7 15 L 2 15 Z" />
-                            <Path Stroke="#88000000"
+                            <Path Stroke="{DynamicResource ResizeHandleGlyphBrush}"
                                   StrokeThickness="1"
                                   Data="M 5.5 6.5 L 10.5 11.5 M 7 15 L 14 15" />
                         </Grid>
@@ -197,7 +198,7 @@
                 </ToggleButton>
 
                 <TextBlock Text="Size"
-                           Foreground="#CCFFFFFF"
+                           Foreground="{DynamicResource TextSecondaryBrush}"
                            FontSize="11"
                            VerticalAlignment="Center"
                            Margin="0,0,5,0" />
@@ -215,7 +216,7 @@
                 <TextBlock x:Name="PenSizeText"
                            Text="3"
                            Width="16"
-                           Foreground="#EFFFFFFF"
+                           Foreground="{DynamicResource TextPrimaryBrush}"
                            FontSize="11"
                            TextAlignment="Right"
                            VerticalAlignment="Center"
@@ -224,10 +225,10 @@
         </Border>
 
         <Border x:Name="Chrome"
-                Background="#06000000"
-                BorderBrush="Transparent"
-                BorderThickness="1"
-                CornerRadius="5"
+                Background="{DynamicResource ImageChromeBackgroundBrush}"
+                BorderBrush="{DynamicResource ImageChromeBorderBrush}"
+                BorderThickness="{DynamicResource DefaultBorderThickness}"
+                CornerRadius="{DynamicResource SmallControlCornerRadius}"
                 Padding="2">
             <Grid x:Name="ImageSurface">
                 <Image x:Name="ImageElement"
@@ -251,9 +252,9 @@
                         Content="&#x270E;"
                         FontSize="14"
                         FontWeight="SemiBold"
-                        Background="#66181818"
-                        BorderBrush="#88FFFFFF"
-                        Foreground="#EFFFFFFF"
+                        Background="{DynamicResource ChromeButtonBackgroundBrush}"
+                        BorderBrush="{DynamicResource ChromeButtonBorderBrush}"
+                        Foreground="{DynamicResource TextPrimaryBrush}"
                         Click="PenButton_Click">
                     <Button.Template>
                         <ControlTemplate TargetType="{x:Type Button}">
@@ -261,18 +262,18 @@
                                     Background="{TemplateBinding Background}"
                                     BorderBrush="{TemplateBinding BorderBrush}"
                                     BorderThickness="1"
-                                    CornerRadius="6">
+                                    CornerRadius="{DynamicResource SmallControlCornerRadius}">
                                 <ContentPresenter HorizontalAlignment="Center"
                                                   VerticalAlignment="Center" />
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Root" Property="Background" Value="#88303030" />
-                                    <Setter TargetName="Root" Property="BorderBrush" Value="#CCFFFFFF" />
+                                    <Setter TargetName="Root" Property="Background" Value="{DynamicResource ChromeButtonHoverBrush}" />
+                                    <Setter TargetName="Root" Property="BorderBrush" Value="{DynamicResource ChromeButtonHoverBorderBrush}" />
                                 </Trigger>
                                 <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="Root" Property="Background" Value="#AAFFFFFF" />
-                                    <Setter Property="Foreground" Value="#FF111111" />
+                                    <Setter TargetName="Root" Property="Background" Value="{DynamicResource ChromeButtonPressedBrush}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource DrawingToolCheckedForegroundBrush}" />
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -284,19 +285,19 @@
                         Height="18"
                         HorizontalAlignment="Right"
                         VerticalAlignment="Bottom"
-                        Background="#E8FFFFFF"
-                        BorderBrush="#AA000000"
-                        BorderThickness="1"
-                        CornerRadius="4"
+                        Background="{DynamicResource ResizeHandleBackgroundBrush}"
+                        BorderBrush="{DynamicResource ResizeHandleBorderBrush}"
+                        BorderThickness="{DynamicResource DefaultBorderThickness}"
+                        CornerRadius="{DynamicResource TinyControlCornerRadius}"
                         Cursor="SizeNWSE"
                         MouseLeftButtonDown="ResizeHandle_MouseLeftButtonDown"
                         MouseLeftButtonUp="ResizeHandle_MouseLeftButtonUp"
                         MouseMove="ResizeHandle_MouseMove">
                     <Grid Margin="3">
-                        <Path Stroke="#99000000"
+                        <Path Stroke="{DynamicResource ResizeHandleGlyphBrush}"
                               StrokeThickness="1.4"
                               Data="M 7 0 L 0 7" />
-                        <Path Stroke="#99000000"
+                        <Path Stroke="{DynamicResource ResizeHandleGlyphBrush}"
                               StrokeThickness="1.4"
                               Data="M 11 0 L 0 11" />
                     </Grid>
