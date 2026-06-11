@@ -43,7 +43,8 @@ namespace QuickSticky
             _categories = new List<SettingsCategory>
             {
                 new("Theme", () => new ThemeSettingsPage()),
-                new("Backups", () => new BackupSettingsPage())
+                new("Backups", () => new BackupSettingsPage()),
+                new("About", () => new AboutSettingsPage())
             };
 
             NavList.ItemsSource = _categories;

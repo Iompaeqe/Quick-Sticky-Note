@@ -1,6 +1,11 @@
 #define MyAppName "QuickSticky"
 #define MyAppExeName "QuickSticky.exe"
-#define MyAppVersion "1.0.0"
+#define MyAppPublishDir "WpfApp1\bin\Release\net9.0-windows\win-x64\publish"
+
+; Pull the version straight from the just-published exe so it always matches the
+; csproj <Version>. Requires `dotnet publish` to have run first (the build
+; scripts in "Dev Notes.txt" do this before invoking ISCC).
+#define MyAppVersion GetVersionNumbersString(SourcePath + MyAppPublishDir + "\" + MyAppExeName)
 
 [Setup]
 AppId={{7B6A40E2-0E83-4F8F-A5F1-51E8C2E3A111}

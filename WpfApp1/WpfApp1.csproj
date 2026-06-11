@@ -8,7 +8,21 @@
         <RootNamespace>QuickSticky</RootNamespace>
         <ApplicationIcon>note.ico</ApplicationIcon>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+        <Version>0.4.0</Version>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <!-- Each published variant records the installer asset it should update
+             itself from. The two publish commands in "Dev Notes.txt" differ only
+             by -self-contained, which sets the SelfContained property below.
+             These names must match the ISCC /F output base filenames. -->
+        <UpdateAssetName Condition="'$(SelfContained)' == 'true'">QuickSticky_Standalone_Full_Setup.exe</UpdateAssetName>
+        <UpdateAssetName Condition="'$(UpdateAssetName)' == ''">QuickSticky_Setup.exe</UpdateAssetName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyMetadata Include="UpdateAssetName" Value="$(UpdateAssetName)" />
+    </ItemGroup>
 
     <ItemGroup>
       <None Remove="note.ico" />
