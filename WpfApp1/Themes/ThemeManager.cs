@@ -51,7 +51,22 @@ namespace QuickSticky
                     "MidnightOrchard",
                     "Midnight Orchard",
                     "A cozy dark developer-style theme with soft violet accents.",
-                    "Themes/MidnightOrchard.xaml")
+                    "Themes/MidnightOrchard.xaml"),
+                new ThemeDefinition(
+                    "BlueprintGrid",
+                    "Blueprint Grid",
+                    "A compact technical theme with square panels and blueprint-style outlines.",
+                    "Themes/BlueprintGrid.xaml"),
+                new ThemeDefinition(
+                    "BentoBloom",
+                    "Bento Bloom",
+                    "A soft roomy theme with rounded bento panels and pill-like controls.",
+                    "Themes/BentoBloom.xaml"),
+                new ThemeDefinition(
+                    "SignalMono",
+                    "Signal Mono",
+                    "A high-contrast monochrome theme with hard edges and strong outlines.",
+                    "Themes/SignalMono.xaml")
             };
 
         private static readonly HashSet<string> ThemeResourcePaths =

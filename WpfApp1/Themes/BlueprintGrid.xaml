@@ -1,0 +1,158 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#FF07111F" />
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FE0B1628" />
+    <SolidColorBrush x:Key="DialogBackgroundBrush" Color="#FE0B1628" />
+    <SolidColorBrush x:Key="WindowSurfaceBrush" Color="#FF0E1B30" />
+    <SolidColorBrush x:Key="WindowPanelBrush" Color="#FF10243E" />
+    <SolidColorBrush x:Key="WindowBorderBrush" Color="#FF2A7EA6" />
+    <SolidColorBrush x:Key="NoteBackgroundBrush" Color="#FE08172B" />
+    <SolidColorBrush x:Key="NoteSurfaceBrush" Color="#FF0D213A" />
+    <SolidColorBrush x:Key="NoteHeaderBrush" Color="#FF12314F" />
+    <SolidColorBrush x:Key="NoteBorderBrush" Color="#FF2A7EA6" />
+    <SolidColorBrush x:Key="SurfaceBorderBrush" Color="#AA4DA8CC" />
+    <SolidColorBrush x:Key="InnerBorderBrush" Color="#554DA8CC" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFF2FBFF" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#FFC7E9F5" />
+    <SolidColorBrush x:Key="TextBodyBrush" Color="#FFA9CADB" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="#FF83B4CC" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="#FF6796AF" />
+    <SolidColorBrush x:Key="HyperlinkBrush" Color="#FF7DE7FF" />
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FF5BE0F5" />
+    <SolidColorBrush x:Key="AccentPressedBrush" Color="#FF0CA6C8" />
+    <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#FF112A45" />
+    <SolidColorBrush x:Key="ButtonHoverBrush" Color="#FF163A5E" />
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#FF1C4A75" />
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#CC2A7EA6" />
+    <SolidColorBrush x:Key="ButtonHoverBorderBrush" Color="#FF5BE0F5" />
+    <SolidColorBrush x:Key="ButtonPressedBorderBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ButtonForegroundBrush" Color="#FFF2FBFF" />
+    <SolidColorBrush x:Key="ChromeButtonBackgroundBrush" Color="#FF10243E" />
+    <SolidColorBrush x:Key="ChromeButtonHoverBrush" Color="#FF174264" />
+    <SolidColorBrush x:Key="ChromeButtonPressedBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="ChromeButtonBorderBrush" Color="#CC2A7EA6" />
+    <SolidColorBrush x:Key="ChromeButtonHoverBorderBrush" Color="#FF5BE0F5" />
+    <SolidColorBrush x:Key="ChromeButtonPressedBorderBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#FFFFA6A6" />
+    <SolidColorBrush x:Key="DangerBackgroundBrush" Color="#553B1A24" />
+    <SolidColorBrush x:Key="DangerHoverBrush" Color="#88522230" />
+    <SolidColorBrush x:Key="DangerPressedBrush" Color="#AA6E2C3E" />
+    <SolidColorBrush x:Key="DangerBorderBrush" Color="#FFFF6F83" />
+    <SolidColorBrush x:Key="WarningBrush" Color="#FFFFD36E" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="#FF7BF0C0" />
+    <SolidColorBrush x:Key="SelectionBrush" Color="#7731C7F0" />
+    <SolidColorBrush x:Key="CaretBrush" Color="#FF7DE7FF" />
+    <SolidColorBrush x:Key="ShadowBrush" Color="#FF000000" />
+    <SolidColorBrush x:Key="OverlayBrush" Color="#AA07111F" />
+    <SolidColorBrush x:Key="ContextMenuBackgroundBrush" Color="#FF0A1728" />
+    <SolidColorBrush x:Key="ContextMenuBorderBrush" Color="#FF2A7EA6" />
+    <SolidColorBrush x:Key="MenuItemHoverBrush" Color="#FF13395C" />
+    <SolidColorBrush x:Key="SeparatorBrush" Color="#882A7EA6" />
+    <SolidColorBrush x:Key="ScrollBarTrackBrush" Color="#331D5D7D" />
+    <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="#AA2A7EA6" />
+    <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#DD25C7E8" />
+    <SolidColorBrush x:Key="ScrollBarThumbPressedBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ListItemBackgroundBrush" Color="#FF10243E" />
+    <SolidColorBrush x:Key="ListItemHoverBrush" Color="#FF153657" />
+    <SolidColorBrush x:Key="ListItemSelectedBrush" Color="#7725C7E8" />
+    <SolidColorBrush x:Key="ListItemBorderBrush" Color="#772A7EA6" />
+    <SolidColorBrush x:Key="ListItemSelectedBorderBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="NavItemHoverBrush" Color="#FF12314F" />
+    <SolidColorBrush x:Key="NavItemSelectedBrush" Color="#6631C7F0" />
+    <SolidColorBrush x:Key="InfoCardBackgroundBrush" Color="#FF0F2036" />
+    <SolidColorBrush x:Key="InfoCardBorderBrush" Color="#883A8DB3" />
+    <SolidColorBrush x:Key="ImageChromeBackgroundBrush" Color="#2207111F" />
+    <SolidColorBrush x:Key="ImageChromeHoverBackgroundBrush" Color="#4410243E" />
+    <SolidColorBrush x:Key="ImageChromeBorderBrush" Color="#00000000" />
+    <SolidColorBrush x:Key="ImageChromeHoverBorderBrush" Color="#DD2A7EA6" />
+    <SolidColorBrush x:Key="ImageChromeActiveBorderBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="DrawingToolbarBackgroundBrush" Color="#FF0A1728" />
+    <SolidColorBrush x:Key="DrawingToolbarBorderBrush" Color="#FF2A7EA6" />
+    <SolidColorBrush x:Key="DrawingToolBackgroundBrush" Color="#FF112A45" />
+    <SolidColorBrush x:Key="DrawingToolHoverBrush" Color="#FF174264" />
+    <SolidColorBrush x:Key="DrawingToolCheckedBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="DrawingToolBorderBrush" Color="#CC2A7EA6" />
+    <SolidColorBrush x:Key="DrawingToolCheckedForegroundBrush" Color="#FF06101C" />
+    <SolidColorBrush x:Key="SliderTrackBrush" Color="#552A7EA6" />
+    <SolidColorBrush x:Key="SliderTrackActiveBrush" Color="#FF25C7E8" />
+    <SolidColorBrush x:Key="SliderThumbBrush" Color="#FFF2FBFF" />
+    <SolidColorBrush x:Key="SliderThumbPressedBrush" Color="#FF06101C" />
+    <SolidColorBrush x:Key="ResizeHandleBackgroundBrush" Color="#FFF2FBFF" />
+    <SolidColorBrush x:Key="ResizeHandleBorderBrush" Color="#FF06101C" />
+    <SolidColorBrush x:Key="ResizeHandleGlyphBrush" Color="#FF06101C" />
+
+    <LinearGradientBrush x:Key="WindowHeaderBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#AA12314F" Offset="0" />
+        <GradientStop Color="#4412314F" Offset="0.55" />
+        <GradientStop Color="#0012314F" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="NoteHeaderOverlayBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#CC12314F" Offset="0" />
+        <GradientStop Color="#3312314F" Offset="0.46" />
+        <GradientStop Color="#0012314F" Offset="1" />
+    </LinearGradientBrush>
+
+    <Color x:Key="ShadowColor">#FF000000</Color>
+
+    <CornerRadius x:Key="WindowCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="WindowHeaderCornerRadius">2,2,0,0</CornerRadius>
+    <CornerRadius x:Key="NoteCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="NoteHeaderCornerRadius">2,2,0,0</CornerRadius>
+    <CornerRadius x:Key="InnerCornerRadius">1</CornerRadius>
+    <CornerRadius x:Key="ControlCornerRadius">2</CornerRadius>
+    <CornerRadius x:Key="SmallControlCornerRadius">1</CornerRadius>
+    <CornerRadius x:Key="TinyControlCornerRadius">1</CornerRadius>
+    <Thickness x:Key="DefaultBorderThickness">2</Thickness>
+    <CornerRadius x:Key="WindowPanelCornerRadius">2</CornerRadius>
+    <Thickness x:Key="ContextMenuPadding">4</Thickness>
+    <sys:Double x:Key="MenuItemFontSize">12</sys:Double>
+    <sys:Double x:Key="MenuItemHeight">26</sys:Double>
+    <sys:Double x:Key="MenuItemMinWidth">124</sys:Double>
+    <Thickness x:Key="MenuItemPadding">10,0</Thickness>
+    <sys:Double x:Key="ScrollBarWidth">8</sys:Double>
+    <Thickness x:Key="ScrollBarTrackMargin">2,1</Thickness>
+    <sys:Double x:Key="ChromeButtonSize">22</sys:Double>
+    <sys:Double x:Key="ChromeButtonFontSize">12</sys:Double>
+    <sys:Double x:Key="NavItemFontSize">13</sys:Double>
+    <sys:Double x:Key="NavItemHeight">32</sys:Double>
+    <Thickness x:Key="NavItemMargin">0,1</Thickness>
+    <Thickness x:Key="NavItemPadding">10,0</Thickness>
+    <Thickness x:Key="ListItemMargin">0,1</Thickness>
+    <Thickness x:Key="ListItemPadding">10,7</Thickness>
+    <sys:Double x:Key="SettingsSectionTitleFontSize">19</sys:Double>
+    <Thickness x:Key="SettingsSectionTitleMargin">0,0,0,12</Thickness>
+    <sys:Double x:Key="SettingsLabelFontSize">13</sys:Double>
+    <sys:Double x:Key="SettingsBodyFontSize">12</sys:Double>
+    <sys:Double x:Key="SettingsBodyLineHeight">17</sys:Double>
+    <Thickness x:Key="InfoCardPadding">12,9</Thickness>
+    <sys:Double x:Key="SettingsButtonHeight">32</sys:Double>
+    <sys:Double x:Key="SettingsButtonMinWidth">154</sys:Double>
+    <sys:Double x:Key="SettingsButtonFontSize">12</sys:Double>
+    <Thickness x:Key="SettingsButtonPadding">14,0</Thickness>
+    <sys:Double x:Key="ToggleTrackWidth">42</sys:Double>
+    <sys:Double x:Key="ToggleTrackHeight">22</sys:Double>
+    <CornerRadius x:Key="ToggleTrackCornerRadius">2</CornerRadius>
+    <sys:Double x:Key="ToggleKnobSize">16</sys:Double>
+    <CornerRadius x:Key="ToggleKnobCornerRadius">1</CornerRadius>
+    <Thickness x:Key="ToggleKnobOffMargin">3,0,0,0</Thickness>
+    <Thickness x:Key="ToggleKnobOnMargin">0,0,3,0</Thickness>
+    <Thickness x:Key="ThemeOptionMargin">0,0,0,6</Thickness>
+    <Thickness x:Key="ThemeOptionPadding">12,9</Thickness>
+    <sys:Double x:Key="DrawingToolWidth">26</sys:Double>
+    <sys:Double x:Key="DrawingToolHeight">20</sys:Double>
+    <Thickness x:Key="DrawingToolMargin">0,0,5,0</Thickness>
+    <sys:Double x:Key="DrawingToolFontSize">10</sys:Double>
+    <Thickness x:Key="DrawingToolbarPadding">5,3</Thickness>
+    <CornerRadius x:Key="DrawingToolbarCornerRadius">2</CornerRadius>
+    <sys:Double x:Key="WindowShadowBlurRadius">8</sys:Double>
+    <sys:Double x:Key="NoteShadowBlurRadius">6</sys:Double>
+    <sys:Double x:Key="WindowShadowOpacity">0.18</sys:Double>
+    <sys:Double x:Key="NoteShadowOpacity">0.16</sys:Double>
+    <sys:Double x:Key="DisabledOpacity">0.48</sys:Double>
+    <sys:Boolean x:Key="ThemeBlurEnabled">False</sys:Boolean>
+    <sys:String x:Key="ThemeBlurTintColor">0x00000000</sys:String>
+</ResourceDictionary>
