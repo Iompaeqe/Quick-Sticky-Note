@@ -13,7 +13,7 @@ namespace QuickSticky
     {
         public static string NotesDir { get; private set; } = null!;
 
-        private static Mutex? _singleInstanceMutex;
+        private static Mutex _singleInstanceMutex;
         private static bool _ownsSingleInstanceMutex;
 
         private const string MutexName = @"Global\QuickSticky_SingleInstance_v1";
@@ -21,7 +21,7 @@ namespace QuickSticky
 
         private readonly CancellationTokenSource _cts = new();
 
-        private void Application_Startup(object? sender, StartupEventArgs e)
+        private void Application_Startup(object sender, StartupEventArgs e)
         {
             NotesDir = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -65,9 +65,9 @@ namespace QuickSticky
 
             if (args.Length == 0 && !opened)
             {
-                //Shutdown();
                 var path = NoteStorage.GenerateNewPath(NotesDir);
                 CreateNote(path, spawnAtCursor: true);
+                //Shutdown();
             }
         }
 
@@ -79,7 +79,7 @@ namespace QuickSticky
 
                 if (File.Exists(file))
                 {
-                    OpenNote(NoteStorage.Load(file), file);
+                    OpenNoteFile(file);
                     return true;
                 }
 
@@ -181,6 +181,16 @@ namespace QuickSticky
         private void CreateNote(string path, bool spawnAtCursor)
         {
             var model = spawnAtCursor ? NoteModel.NewBlankAtCursor() : new NoteModel();
+            OpenNote(model, path);
+        }
+
+        public void OpenNoteFile(string path)
+        {
+            var model = NoteStorage.Load(path);
+
+            if (model.Removed)
+                path = NoteStorage.RestoreFromBackup(path, NotesDir, model);
+
             OpenNote(model, path);
         }
 

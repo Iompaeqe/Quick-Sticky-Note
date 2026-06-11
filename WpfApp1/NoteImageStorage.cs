@@ -80,6 +80,25 @@ namespace QuickSticky
             }
         }
 
+        public static void MoveAssetFolder(string sourceNotePath, string destinationNotePath)
+        {
+            var sourceFolder = GetAssetFolderPath(sourceNotePath);
+
+            if (!Directory.Exists(sourceFolder))
+                return;
+
+            var destinationFolder = GetAssetFolderPath(destinationNotePath);
+            var destinationParent = Path.GetDirectoryName(destinationFolder);
+
+            if (!string.IsNullOrWhiteSpace(destinationParent))
+                Directory.CreateDirectory(destinationParent);
+
+            if (Directory.Exists(destinationFolder))
+                throw new IOException($"Destination asset folder already exists: {destinationFolder}");
+
+            Directory.Move(sourceFolder, destinationFolder);
+        }
+
         public static void DeleteAssetFile(string notePath, string fileName)
         {
             if (string.IsNullOrWhiteSpace(fileName))

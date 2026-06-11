@@ -12,6 +12,9 @@ namespace QuickSticky
         public string Title { get; set; } = "";
         public string Content { get; set; } = ""; // Legacy/plain text fallback.
 
+        public bool Removed { get; set; }
+        public DateTime? RemovedAtUtc { get; set; }
+
         public double Left { get; set; } = 100;
         public double Top { get; set; } = 100;
         public double Width { get; set; } = 300;
@@ -23,14 +26,26 @@ namespace QuickSticky
         {
             GetCursorPos(out var p);
 
-            double left = p.X - 30;
-            double top = p.Y - 30;
+            // GetCursorPos reports pixels in this process's coordinate space. WPF
+            // is System-DPI aware (no per-monitor manifest), so window coordinates
+            // are device-independent units scaled by the system DPI. Convert with
+            // the system DPI so the note lands under the cursor on scaled displays.
+            double scale = GetSystemDpiScale();
 
-            var screenWidth = SystemParameters.VirtualScreenWidth;
-            var screenHeight = SystemParameters.VirtualScreenHeight;
+            double left = p.X / scale - 30;
+            double top = p.Y / scale - 30;
 
-            left = Math.Max(0, Math.Min(left, screenWidth - 100));
-            top = Math.Max(0, Math.Min(top, screenHeight - 100));
+            // The virtual desktop starts at negative coordinates when monitors sit
+            // to the left of, or above, the primary screen. Clamp within the full
+            // virtual bounds (origin + size), not [0..], so notes opened on those
+            // monitors stay put instead of snapping back onto the primary screen.
+            double minLeft = SystemParameters.VirtualScreenLeft;
+            double minTop = SystemParameters.VirtualScreenTop;
+            double maxLeft = minLeft + SystemParameters.VirtualScreenWidth - 100;
+            double maxTop = minTop + SystemParameters.VirtualScreenHeight - 100;
+
+            left = Math.Max(minLeft, Math.Min(left, maxLeft));
+            top = Math.Max(minTop, Math.Min(top, maxTop));
 
             return new NoteModel
             {
@@ -40,8 +55,28 @@ namespace QuickSticky
             };
         }
 
+        private static double GetSystemDpiScale()
+        {
+            try
+            {
+                uint dpi = GetDpiForSystem();
+
+                if (dpi > 0)
+                    return dpi / 96.0;
+            }
+            catch
+            {
+                // GetDpiForSystem is unavailable before Windows 10 1607; assume 100%.
+            }
+
+            return 1;
+        }
+
         [DllImport("user32.dll")]
         private static extern bool GetCursorPos(out POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern uint GetDpiForSystem();
 
         [StructLayout(LayoutKind.Sequential)]
         private struct POINT

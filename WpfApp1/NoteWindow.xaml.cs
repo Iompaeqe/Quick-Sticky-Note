@@ -17,7 +17,7 @@ namespace QuickSticky
         private const double MinInsertedImageWidth = 40;
         private const double EditorImagePadding = 18;
 
-        private readonly string _path;
+        private string _path;
 
         private readonly DispatcherTimer _saveTimer = new()
         {
@@ -39,6 +39,7 @@ namespace QuickSticky
         private bool _dirty;
         private bool _isLoading;
         private bool _isTitleEditing;
+        private bool _isRemoved;
         private ResizableImageBlock _selectedImage;
         private ResizableImageBlock _activeDrawingImage;
 
@@ -199,6 +200,9 @@ namespace QuickSticky
         {
             _isTitleEditing = false;
             TitleEditor.IsReadOnly = true;
+
+            // Commit the title now so the file is renamed to match it.
+            SaveNow();
         }
 
         private void Editor_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
@@ -621,10 +625,12 @@ namespace QuickSticky
         {
             try
             {
-                _model.Version = 2;
-                _model.Blocks = NoteDocumentConverter.ToBlocks(Editor.Document, _path);
-                _model.Content = NoteDocumentConverter.ToPlainText(_model.Blocks);
+                // Don't churn the filename while the title is mid-edit; rename once
+                // editing ends (EndTitleEditing calls SaveNow).
+                if (!_isTitleEditing)
+                    EnsureFileNameMatchesTitle();
 
+                UpdateModelFromDocument();
                 NoteStorage.Save(_path, _model);
                 _dirty = false;
                 _saveTimer.Stop();
@@ -632,6 +638,36 @@ namespace QuickSticky
             catch
             {
             }
+        }
+
+        private void EnsureFileNameMatchesTitle()
+        {
+            _path = NoteStorage.RenameToMatchTitle(_path, _model.Title);
+        }
+
+        private void UpdateModelFromDocument()
+        {
+            _model.Version = 2;
+            _model.Blocks = NoteDocumentConverter.ToBlocks(Editor.Document, _path);
+            _model.Content = NoteDocumentConverter.ToPlainText(_model.Blocks);
+        }
+
+        // Empty == no title, no text, and no images. Call after UpdateModelFromDocument.
+        private bool IsNoteEmpty()
+        {
+            if (!string.IsNullOrWhiteSpace(_model.Title))
+                return false;
+
+            foreach (var block in _model.Blocks)
+            {
+                if (string.Equals(block.Type, "Image", StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                if (!string.IsNullOrWhiteSpace(block.Text))
+                    return false;
+            }
+
+            return true;
         }
 
         private void SettingsMenuItem_Click(object sender, RoutedEventArgs e)
@@ -656,8 +692,44 @@ namespace QuickSticky
 
             if (_closeClicks >= NoteWindowSettings.RequiredCloseClicks)
             {
-                NoteStorage.Delete(_path);
+                RemoveNote();
+            }
+        }
+
+        private void RemoveNote()
+        {
+            try
+            {
+                UpdateModelFromDocument();
+
+                // Empty notes are discarded outright — never backed up — regardless
+                // of the auto-backup setting.
+                if (IsNoteEmpty() || !SettingsStore.Current.EnableAutoBackups)
+                {
+                    NoteStorage.Delete(_path);
+                }
+                else
+                {
+                    EnsureFileNameMatchesTitle();
+                    NoteStorage.MoveToBackupsAsRemoved(_path, _model);
+                }
+
+                _dirty = false;
+                _isRemoved = true;
+                _saveTimer.Stop();
+
                 Close();
+            }
+            catch
+            {
+                _closeClicks = 0;
+
+                MessageBox.Show(
+                    this,
+                    "The note could not be removed.",
+                    "Close Note",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
         }
 
@@ -680,7 +752,7 @@ namespace QuickSticky
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            if (_closeClicks < NoteWindowSettings.RequiredCloseClicks)
+            if (!_isRemoved)
                 SaveNow();
 
             base.OnClosing(e);
